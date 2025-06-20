@@ -1,0 +1,155 @@
+[
+  {
+    "id": "test1",
+    "title": "Math Test",
+    "description": "Algebra basics",
+    "instructions": "All questions are compulsory. Time: 1 hour.",
+    "duration": 1,
+    "testDate": "2025-06-11",
+    "startTime": "09:00",
+    "endTime": "23:59",
+    "questions": [
+      {
+        "id": "0",
+        "questionText": "Solve for x: 2x + 5 = 15",
+        "options": ["5", "10", "7.5", "20"],
+        "correctAnswer": "5",
+        "difficulty": "easy",
+        "subject": "Mathematics",
+        "topic": "Linear Equations"
+      },
+      {
+        "id": "1",
+        "questionText": "What is (x + 3)(x - 3)?",
+        "options": ["x² - 9", "x² + 9", "x² - 6x + 9", "x² + 6x + 9"],
+        "correctAnswer": "x² - 9",
+        "difficulty": "medium",
+        "subject": "Mathematics",
+        "topic": "Polynomials"
+      },
+      {
+        "id": "3",
+        "questionText": "Factor completely: x² - 5x + 6",
+        "options": ["(x-2)(x-3)", "(x+2)(x+3)", "(x-1)(x-6)", "(x+1)(x+6)"],
+        "correctAnswer": "(x-2)(x-3)",
+        "difficulty": "hard",
+        "subject": "Mathematics",
+        "topic": "Factoring"
+      }
+    ]
+  },
+  {
+    "id": "test2",
+    "title": "Science Test",
+    "description": "Physics and Chemistry",
+    "instructions": "All questions are compulsory.",
+    "duration": 45,
+    "testDate": "2025-06-08",
+    "startTime": "09:00",
+    "endTime": "19:00",
+    "questions": [
+      {
+        "id": "s1",
+        "questionText": "What is the chemical symbol for gold?",
+        "options": ["Go", "Gd", "Au", "Ag"],
+        "correctAnswer": "Au",
+        "difficulty": "easy",
+        "subject": "Chemistry",
+        "topic": "Elements"
+      },
+      {
+        "id": "s2",
+        "questionText": "Which gas is most abundant in Earth's atmosphere?",
+        "options": ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+        "correctAnswer": "Nitrogen",
+        "difficulty": "medium",
+        "subject": "Chemistry",
+        "topic": "Atmosphere"
+      },
+      {
+        "id": "s3",
+        "questionText": "What is the SI unit of electric current?",
+        "options": ["Volt", "Ohm", "Ampere", "Watt"],
+        "correctAnswer": "Ampere",
+        "difficulty": "easy",
+        "subject": "Physics",
+        "topic": "Electricity"
+      }
+    ]
+  },
+  {
+    "id": "test3",
+    "title": "English Test",
+    "description": "Grammar and Composition",
+    "instructions": "Use proper punctuation.",
+    "duration": 25,
+    "testDate": "2025-06-08",
+    "startTime": "09:00",
+    "endTime": "19:00",
+    "questions": [
+      {
+        "id": "e1",
+        "questionText": "Which sentence is correct?",
+        "options": [
+          "She don't like apples.",
+          "She doesn't likes apples.",
+          "She doesn't like apples.",
+          "She don't likes apples."
+        ],
+        "correctAnswer": "She doesn't like apples.",
+        "difficulty": "easy",
+        "subject": "English",
+        "topic": "Grammar"
+      },
+      {
+        "id": "e2",
+        "questionText": "Identify the adverb: 'He ran quickly to the store.'",
+        "options": ["He", "ran", "quickly", "store"],
+        "correctAnswer": "quickly",
+        "difficulty": "medium",
+        "subject": "English",
+        "topic": "Parts of Speech"
+      }
+    ]
+  },
+  {
+    "id": "test4",
+    "title": "Physics Chapter 1 Test",
+    "description": "Test on Motion and Laws",
+    "instructions": "Attempt all questions within the time limit.",
+    "duration": 30,
+    "testDate": "2025-06-08",
+    "startTime": "09:00",
+    "endTime": "23:00",
+    "isAttempted": false,
+    "questions": [
+      {
+        "id": "q1",
+        "questionText": "What is Newton's second law?",
+        "options": ["F=ma", "E=mc²", "a²+b²=c²", "v=u+at"],
+        "correctAnswer": "F=ma",
+        "difficulty": "easy",
+        "subject": "Physics",
+        "topic": "Laws of Motion"
+      },
+      {
+        "id": "q2",
+        "questionText": "What is the SI unit of force?",
+        "options": ["Joule", "Newton", "Watt", "Pascal"],
+        "correctAnswer": "Newton",
+        "difficulty": "medium",
+        "subject": "Physics",
+        "topic": "Laws of Motion"
+      },
+      {
+        "id": "q3",
+        "questionText": "A 5kg mass accelerates at 2m/s². Find force.",
+        "options": ["2N", "10N", "5N", "15N"],
+        "correctAnswer": "10N",
+        "difficulty": "hard",
+        "subject": "Physics",
+        "topic": "Force"
+      }
+    ]
+  }
+]
