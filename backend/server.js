@@ -18,7 +18,8 @@ connectCloudinary()
 
 // middlewares 
 app.use(express.json())
-app.use(cors())
+app.use(cors({origin:['https://think-after-online-examination-syst.vercel.app','http://localhost:5173','http://localhost:5174']
+}))
 
 // ✅ Add this line BELOW app.use(cors()) and app.use(express.json())
 app.use('/uploads', express.static('uploads'));

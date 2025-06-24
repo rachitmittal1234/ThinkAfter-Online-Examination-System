@@ -115,7 +115,7 @@ const ViewUserQuestionResponsePage = () => {
               <h3 className="text-lg font-medium text-gray-800 mb-3">Question:</h3>
               <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
                 <p className="whitespace-pre-wrap text-gray-800">{question.questionText}</p>
-                {question.image && (
+                {/* {question.image && (
     <div className="mt-2">
       <img
         src={`${backendUrl}/uploads/questions/${question.image}`}
@@ -123,7 +123,7 @@ const ViewUserQuestionResponsePage = () => {
         className="max-w-full max-h-64 rounded border border-gray-300"
       />
     </div>
-  )}
+  )} */}
               </div>
             </div>
 

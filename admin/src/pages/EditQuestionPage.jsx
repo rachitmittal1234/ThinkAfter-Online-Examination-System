@@ -10,9 +10,9 @@ const EditQuestionPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [existingImage, setExistingImage] = useState(null);
-    const [newImage, setNewImage] = useState(null);
-    const [removeImage, setRemoveImage] = useState(false);
+    // const [existingImage, setExistingImage] = useState(null);
+    // const [newImage, setNewImage] = useState(null);
+    // const [removeImage, setRemoveImage] = useState(false);
 
 
     const [questionText, setQuestionText] = useState('');
@@ -40,7 +40,7 @@ const EditQuestionPage = () => {
                 setDifficulty(q.difficulty || '');
                 setTopics(q.topics || '');
                 setSubject(q.subject || '');
-                setExistingImage(q.image || null);
+                // setExistingImage(q.image || null);
 
             } catch (err) {
                 toast.error('Failed to fetch question');
@@ -52,38 +52,50 @@ const EditQuestionPage = () => {
     }, [questionId]);
 
     const handleUpdate = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-        const formData = new FormData();
-        formData.append('questionText', questionText);
-        formData.append('positiveMarks', positiveMarks);
-        formData.append('negativeMarks', negativeMarks);
-        formData.append('correctAnswer', correctAnswer);
-        formData.append('difficulty', difficulty);
-        formData.append('topics', topics);
-        formData.append('subject', subject);
-        options.forEach((opt) => formData.append('options', opt));
-        if (newImage) formData.append('image', newImage);
-        if (removeImage) formData.append('removeImage', 'true');
+  e.preventDefault();
+  setIsSubmitting(true);
 
-        const res = await axios.put(`${backendUrl}/api/questions/${questionId}`, formData, {
-            headers: {
-                token: localStorage.getItem('token'),
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+  try {
+    // Handle topics - check if it's already an array
+    const topicsArray = Array.isArray(topics) 
+      ? topics 
+      : topics.split(',').map(t => t.trim()).filter(t => t);
 
-        if (res.data.updatedQuestion) {
-            toast.success('Question updated successfully');
-            navigate(-1);
-        }
-    } catch (err) {
-        toast.error(err.response?.data?.message || 'Failed to update question');
-    } finally {
-        setIsSubmitting(false);
+    const payload = {
+      questionText,
+      positiveMarks: Number(positiveMarks),
+      negativeMarks: Number(negativeMarks),
+      correctAnswer,
+      difficulty,
+      topics: topicsArray,
+      subject,
+      options: options.filter(opt => opt.trim() !== '') // Remove empty options
+    };
+
+    console.log("Sending payload:", payload); // Debug log
+
+    const res = await axios.put(`${backendUrl}/api/questions/${questionId}`, payload, {
+      headers: {
+        token: localStorage.getItem('token'),
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log("Response:", res); // Debug log
+
+    if (res.data.updatedQuestion) {
+      toast.success('Question updated successfully');
+      navigate(-1);
     }
+  } catch (err) {
+    console.error("Update error:", err); // Detailed error log
+    console.error("Error response:", err.response); // Response data
+    toast.error(err.response?.data?.message || 'Failed to update question');
+  } finally {
+    setIsSubmitting(false);
+  }
 };
+
 
 
     if (isLoading) {
@@ -213,7 +225,7 @@ const EditQuestionPage = () => {
                     </div>
 
                     {/* Image Section */}
-<div className="space-y-2">
+{/* <div className="space-y-2">
   <label className="block text-sm font-medium text-gray-700">Question Image</label>
 
   {existingImage && !removeImage && (
@@ -246,7 +258,7 @@ const EditQuestionPage = () => {
       hover:file:bg-blue-100"
     />
   ) : null}
-</div>
+</div> */}
 
 
                     {/* Action Buttons */}

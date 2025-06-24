@@ -31,7 +31,7 @@ const AnalysisReportPage = () => {
     'Time Pressure',
     'Guessing',
     'Did Not Revise Topic',
-    'Wrong Option',
+    'Marked Wrong Option',
     'Lack of Practice',
     'Left Blank Intentionally',
     'Tricked by Options',
@@ -552,7 +552,7 @@ const AnalysisReportPage = () => {
                           <div>
                             <p className="text-gray-800 font-medium">
                               {item.question?.questionText}
-                              {item.question?.image && (
+                              {/* {item.question?.image && (
   <div className="mt-2">
     <img
       src={`${backendUrl}/uploads/questions/${item.question.image}`}
@@ -560,7 +560,7 @@ const AnalysisReportPage = () => {
       className="max-w-full max-h-72 border rounded"
     />
   </div>
-)}
+)} */}
                             </p>
                             <div className="flex flex-wrap gap-1 mt-1">
                               <span className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded">

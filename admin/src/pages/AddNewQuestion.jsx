@@ -16,62 +16,61 @@ const AddNewQuestion = () => {
   const [difficulty, setDifficulty] = useState('');
   const [topics, setTopics] = useState('');
   const [subject, setSubject] = useState('');
-  const [image, setImage] = useState(null);
+  // const [image, setImage] = useState(null);
 
   const fileInputRef = useRef(null);
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    if (!options.includes(correctAnswer)) {
-      toast.error('Correct answer must match one of the options');
-      setIsSubmitting(false);
-      return;
+  if (!options.includes(correctAnswer)) {
+    toast.error('Correct answer must match one of the options');
+    setIsSubmitting(false);
+    return;
+  }
+
+  try {
+    const payload = {
+      questionText,
+      options,
+      correctAnswer,
+      positiveMarks,
+      negativeMarks,
+      difficulty,
+      topics: topics.split(',').map(t => t.trim()), // convert comma-separated to array
+      subject
+    };
+
+    const res = await axios.post(`${backendUrl}/api/questions`, payload, {
+      headers: {
+        token: localStorage.getItem('token'),
+        'Content-Type': 'application/json'
+      },
+    });
+
+    if (res.data.success) {
+      toast.success(res.data.message || 'Question added successfully');
+
+      // Reset the form
+      setQuestionText('');
+      setOptions(['', '', '', '']);
+      setCorrectAnswer('');
+      setPositiveMarks(1);
+      setNegativeMarks(0);
+      setDifficulty('');
+      setTopics('');
+      setSubject('');
     }
+  } catch (err) {
+    console.error(err);
+    toast.error(err.response?.data?.message || 'Failed to add question');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
-    try {
-      const formData = new FormData();
-      formData.append('questionText', questionText);
-      options.forEach(opt => formData.append('options', opt));
-      formData.append('correctAnswer', correctAnswer);
-      formData.append('positiveMarks', positiveMarks);
-      formData.append('negativeMarks', negativeMarks);
-      formData.append('difficulty', difficulty);
-      formData.append('topics', topics);
-      formData.append('subject', subject);
-      if (image) formData.append('image', image);
-
-      const res = await axios.post(`${backendUrl}/api/questions`, formData, {
-        headers: {
-          token: localStorage.getItem('token'),
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      if (res.data.success) {
-        toast.success(res.data.message || 'Question added successfully');
-        
-        // Reset the form
-        setQuestionText('');
-        setOptions(['', '', '', '']);
-        setCorrectAnswer('');
-        setPositiveMarks(1);
-        setNegativeMarks(0);
-        setDifficulty('');
-        setTopics('');
-        setSubject('');
-        setImage(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error(err.response?.data?.message || 'Failed to add question');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -193,7 +192,7 @@ const AddNewQuestion = () => {
           </div>
 
           {/* Image Upload */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Question Image (Optional)</label>
             <div className="mt-1 flex items-center">
               <input
@@ -209,7 +208,7 @@ const AddNewQuestion = () => {
                   hover:file:bg-blue-100"
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <div className="flex justify-end pt-4">

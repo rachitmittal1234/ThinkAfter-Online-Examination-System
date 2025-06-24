@@ -213,7 +213,7 @@ const QuestionPage = () => {
 
         <div className="bg-white p-4 rounded shadow mb-4">
           <h3 className="text-lg font-semibold mb-2">Q{index + 1}. {question.questionText}</h3>
-          {question.image && (
+          {/* {question.image && (
             <div className="my-4">
               <img
                 src={`${backendUrl}/uploads/questions/${question.image}`}
@@ -221,7 +221,7 @@ const QuestionPage = () => {
                 className="max-w-full max-h-72 border rounded"
               />
             </div>
-          )}
+          )} */}
           <p className="text-sm text-gray-600 mb-3">Subject: {question.subject}</p>
           <ul className="space-y-2">
             {question.options.map((opt, idx) => (

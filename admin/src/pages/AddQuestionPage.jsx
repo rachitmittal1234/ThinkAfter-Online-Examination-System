@@ -16,30 +16,29 @@ const AddQuestionPage = () => {
   const [difficulty, setDifficulty] = useState('');
   const [topics, setTopics] = useState('');
   const [subject, setSubject] = useState('');
-  const [image, setImage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.append('questionText', questionText);
-    options.forEach(opt => formData.append('options[]', opt));
-    formData.append('correctAnswer', correctAnswer);
-    formData.append('positiveMarks', positiveMarks);
-    formData.append('negativeMarks', negativeMarks);
-    formData.append('topics', topics);
-    formData.append('subject', subject);
-    formData.append('difficulty', difficulty);
-    formData.append('testIds[]', testId);
-    if (image) formData.append('image', image);
+    const payload = {
+      questionText,
+      options: options.filter(opt => opt.trim() !== ''), // Remove empty options
+      correctAnswer,
+      positiveMarks: Number(positiveMarks),
+      negativeMarks: Number(negativeMarks),
+      difficulty,
+      topics: topics.split(',').map(t => t.trim()).filter(t => t), // Convert to array and remove empty
+      subject,
+      testIds: [testId]
+    };
 
     try {
-      const response = await axios.post(`${backendUrl}/api/questions`, formData, {
+      const response = await axios.post(`${backendUrl}/api/questions`, payload, {
         headers: {
           token: localStorage.getItem('token'),
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         }
       });
 
@@ -49,7 +48,7 @@ const AddQuestionPage = () => {
       }
     } catch (err) {
       console.error(err);
-      toast.error("Failed to add question");
+      toast.error(err.response?.data?.message || "Failed to add question");
     } finally {
       setIsSubmitting(false);
     }
@@ -60,7 +59,7 @@ const AddQuestionPage = () => {
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Question</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6" encType="multipart/form-data">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Question Text */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Question Text</label>
@@ -98,7 +97,6 @@ const AddQuestionPage = () => {
           </div>
 
           {/* Correct Answer */}
-         
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Correct Answer</label>
             <select
@@ -171,24 +169,7 @@ const AddQuestionPage = () => {
                 onChange={e => setSubject(e.target.value)}
                 placeholder="e.g., Mathematics"
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-          </div>
-
-          {/* Image Upload */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Question Image (Optional)</label>
-            <div className="mt-1 flex items-center">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={e => setImage(e.target.files[0])}
-                className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-md file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100"
+                required
               />
             </div>
           </div>

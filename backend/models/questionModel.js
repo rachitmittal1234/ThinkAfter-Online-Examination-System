@@ -6,9 +6,7 @@ const questionSchema = new mongoose.Schema({
     required: true
   },
 
-  image: {
-    type: String // Optional image URL or file path
-  },
+  
 
   options: {
     type: [String],

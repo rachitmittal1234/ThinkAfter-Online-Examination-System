@@ -217,7 +217,7 @@ const AllQuestionsPage = () => {
                     </span>
                   </div>
 
-                  {q.image && (
+                  {/* {q.image && (
                     <div className="my-3">
                       <img
   src={`${backendUrl}/uploads/questions/${q.image}`}
@@ -226,7 +226,7 @@ const AllQuestionsPage = () => {
 />
 
                     </div>
-                  )}
+                  )} */}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 my-4">
                     {q.options.map((opt, i) => (

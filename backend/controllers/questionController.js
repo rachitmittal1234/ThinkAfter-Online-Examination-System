@@ -18,21 +18,18 @@ export const addQuestion = async (req, res) => {
       testIds, // optional
     } = req.body;
 
-    const image = req.file ? req.file.filename : null;
-
     let validTestIds = [];
 
-    // If testIds are provided, validate them
+    // Validate testIds if provided
     if (testIds && Array.isArray(testIds) && testIds.length > 0) {
       const foundTests = await TestModel.find({ _id: { $in: testIds } });
 
       if (foundTests.length > 0) {
         validTestIds = foundTests.map(t => t._id);
 
-        // Create question
+        // Create and save question with test association
         const newQuestion = new Question({
           questionText,
-          image,
           options,
           correctAnswer,
           positiveMarks,
@@ -45,7 +42,7 @@ export const addQuestion = async (req, res) => {
 
         const savedQuestion = await newQuestion.save();
 
-        // Add question to tests
+        // Push question reference to each test
         for (const test of foundTests) {
           test.questions.push(savedQuestion._id);
           await test.save();
@@ -58,10 +55,9 @@ export const addQuestion = async (req, res) => {
       }
     }
 
-    // If no testIds, save question without test association
+    // Save question without test association
     const newQuestion = new Question({
       questionText,
-      image,
       options,
       correctAnswer,
       positiveMarks,
@@ -69,21 +65,23 @@ export const addQuestion = async (req, res) => {
       topics,
       subject,
       difficulty,
-      test_ids: [], // or skip this field if not required
+      test_ids: [],
     });
 
     const savedQuestion = await newQuestion.save();
 
     res.status(201).json({
-      success:true,
+      success: true,
       message: 'Question added without test association',
       question: savedQuestion,
     });
+
   } catch (error) {
     console.error('Error adding question:', error);
     res.status(500).json({ message: 'Server error while adding question' });
   }
 };
+
 
 
 // Get all questions
@@ -116,51 +114,41 @@ export const updateQuestion = async (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
 
-    const question = await Question.findById(id);
+    // Validate options length
+    if (updatedData.options && updatedData.options.length < 3) {
+      return res.status(400).json({ message: 'At least three options are required' });
+    }
+
+    // Validate correct answer is in options
+    if (updatedData.options && updatedData.correctAnswer && 
+        !updatedData.options.includes(updatedData.correctAnswer)) {
+      return res.status(400).json({ message: 'Correct answer must be one of the options' });
+    }
+
+    const question = await Question.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true
+    });
+
     if (!question) {
       return res.status(404).json({ message: 'Question not found' });
     }
 
-    // Handle image removal if requested
-    if (req.body.removeImage === 'true' && question.image) {
-      const imagePath = path.join('uploads/questions', question.image);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath); // delete image from disk
-      }
-      question.image = null; // remove reference
-    }
-
-    // Handle new image upload
-    if (req.file) {
-      // Delete old image if it exists
-      if (question.image) {
-        const oldImagePath = path.join('uploads/questions', question.image);
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
-        }
-      }
-
-      question.image = req.file.filename;
-    }
-
-    // Update other fields
-    question.questionText = updatedData.questionText;
-    question.options = updatedData.options;
-    question.correctAnswer = updatedData.correctAnswer;
-    question.positiveMarks = updatedData.positiveMarks;
-    question.negativeMarks = updatedData.negativeMarks;
-    question.difficulty = updatedData.difficulty;
-    question.topics = updatedData.topics;
-    question.subject = updatedData.subject;
-
-    const updatedQuestion = await question.save();
-
-    res.status(200).json({ message: 'Question updated', updatedQuestion });
+    res.status(200).json({ message: 'Question updated', updatedQuestion: question });
   } catch (error) {
     console.error('Error updating question:', error);
-    res.status(500).json({ message: 'Error updating question' });
+    
+    // Handle mongoose validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(val => val.message);
+      return res.status(400).json({ message: 'Validation error', errors: messages });
+    }
+    
+    res.status(500).json({ message: 'Error updating question', error: error.message });
   }
 };
+
+
 // Delete question
 export const deleteQuestion = async (req, res) => {
   try {

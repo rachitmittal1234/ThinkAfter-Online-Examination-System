@@ -9,7 +9,7 @@ import {
 import adminAuth from '../middleware/adminAuth.js';
 import mongoose from 'mongoose';
 
-import upload from '../middleware/upload.js';
+// import upload from "../middleware/multer.js";
 import TestModel from '../models/testModel.js';
 import Question from '../models/questionModel.js'
 
@@ -20,7 +20,8 @@ import fs from 'fs';
 const questionRouter = express.Router();
 
 // Create a new question with optional image and test title mapping
-questionRouter.post('/',adminAuth, upload.single('image'), addQuestion);
+questionRouter.post('/', adminAuth, addQuestion);
+
 
 // Get all questions
 questionRouter.get('/', getAllQuestions);
@@ -44,7 +45,7 @@ questionRouter.get('/by-test/:testId', async (req, res) => {
 questionRouter.get('/:id', getQuestionById);
 
 // Update a question (with optional image and test title update)
-questionRouter.put('/:id',adminAuth, upload.single('image'), updateQuestion);
+questionRouter.put('/:id',adminAuth,  updateQuestion);
 
 // Delete a question
 questionRouter.delete('/:id',adminAuth, deleteQuestion);
@@ -165,20 +166,20 @@ questions.forEach((q, index) => {
      .moveDown(1);
 
   // ⬇️ Add this block to insert the image
-  if (q.image) {
-    const imagePath = path.join('uploads', 'questions', q.image);
-    if (fs.existsSync(imagePath)) {
-      try {
-        doc.image(imagePath, {
-          fit: [450, 250],
-          align: 'center',
-          valign: 'center'
-        }).moveDown(1);
-      } catch (err) {
-        console.warn(`Could not include image ${q.image}:`, err.message);
-      }
-    }
-  }
+  // if (q.image) {
+  //   const imagePath = path.join('uploads', 'questions', q.image);
+  //   if (fs.existsSync(imagePath)) {
+  //     try {
+  //       doc.image(imagePath, {
+  //         fit: [450, 250],
+  //         align: 'center',
+  //         valign: 'center'
+  //       }).moveDown(1);
+  //     } catch (err) {
+  //       console.warn(`Could not include image ${q.image}:`, err.message);
+  //     }
+  //   }
+  // }
 
   // Options + Correct Answer
   q.options.forEach((opt, i) => {
