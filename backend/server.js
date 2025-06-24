@@ -13,22 +13,31 @@ import anonymousMessageRouter from './routes/anonymousMessageRoute.js'
 // App Config
 const app = express()
 const port = process.env.PORT || 4000
+const allowedOrigins = [
+  'https://think-after-online-examination-syst-silk.vercel.app',
+  'https://think-after-online-examination-syst.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:5174'
+];
 connectDB()
 connectCloudinary()
 
-// middlewares 
-app.use(express.json())
 app.use(cors({
-  origin: [
-    'https://think-after-online-examination-syst-silk.vercel.app',
-    'https://think-after-online-examination-syst.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:5174'
-  ],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// middlewares 
+app.use(express.json())
+
 
 app.options('*', cors()); // allow preflight across all routes
 
